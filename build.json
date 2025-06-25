@@ -1,0 +1,8 @@
+{
+    "project": "navmesh",
+    "cpp": "C++17",
+    "incdirs": [ "src/", "include/navmesh/" ],
+    "dependencies": [ "CDT", "thread-pool" ],
+
+    "include-public": "include/"
+}

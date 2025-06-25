@@ -1,0 +1,11 @@
+{
+    "library": "CDT",
+    "minstd": "C++98",
+    "include": "include/",
+    "configs": {},
+    "all": {
+        "links": [],
+        "binary.debug": "",
+        "binary.release": ""
+    }
+}
