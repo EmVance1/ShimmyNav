@@ -118,7 +118,7 @@ struct Triangle {
         return (float)((a.x - c.x) * (b.y - c.y) - (b.x - c.x) * (a.y - c.y));
     }
 
-    constexpr bool contains(const Vector2f* vertices, Vector2f p, bool with_corners) const {
+    constexpr bool contains(const Vector2f* vertices, Vector2f p, bool with_corners = true) const {
         const auto a = vertices[A];
         const auto b = vertices[B];
         const auto c = vertices[C];
