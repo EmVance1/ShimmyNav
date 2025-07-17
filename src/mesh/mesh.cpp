@@ -1,8 +1,26 @@
-#include "lib.h"
+#include "types.h"
 #include <fstream>
 
 
 namespace nav {
+
+
+std::optional<size_t> NavMesh::get_triangle(Vector2f p, float error) const {
+    for (usize i = 0; i < triangles.size(); i++) {
+        if (triangles[i].contains(vertices.data(), p)) {
+            return i;
+        }
+    }
+    if (error < 0.0001f) { return {}; }
+    for (usize i = 0; i < triangles.size(); i++) {
+        if (triangles[i].contains_with_error(vertices.data(), p, error)) {
+            return i;
+        }
+    }
+    return {};
+}
+
+
 
 void NavMesh::write_file(const std::string& filename, float scale) const {
     auto f = std::ofstream(filename, std::ios::binary);
@@ -21,9 +39,14 @@ void NavMesh::write_file(const std::string& filename, float scale) const {
     f.write((char*)&edge_count, sizeof(usize));
     for (const auto& e : edges) {
         const Edge neg = { SIZE_MAX, Vector2f{}, 0, 0 };
-        if (e.size() > 0) { f.write((char*)&e[0], sizeof(Edge)); } else { f.write((char*)&neg, sizeof(Edge)); }
-        if (e.size() > 1) { f.write((char*)&e[1], sizeof(Edge)); } else { f.write((char*)&neg, sizeof(Edge)); }
-        if (e.size() > 2) { f.write((char*)&e[2], sizeof(Edge)); } else { f.write((char*)&neg, sizeof(Edge)); }
+        for (size_t i = 0; i < 3; i++) {
+            if (e.size() > i) {
+                const auto _e = NavMesh::Edge{ e[i].index, e[i].center / scale, e[i].a, e[i].b };
+                f.write((char*)&_e, sizeof(Edge));
+            } else {
+                f.write((char*)&neg, sizeof(Edge));
+            }
+        }
     }
 }
 
@@ -45,7 +68,7 @@ NavMesh NavMesh::read_file(const std::string& filename, float scale) {
     for (usize i = 0; i < vert_count; i++) {
         Vector2f v;
         f.read((char*)&v, sizeof(Vector2f));
-        v = v * scale;
+        v *= scale;
         result.vertices.push_back(v);
     }
     usize edge_count = 0;
@@ -54,15 +77,13 @@ NavMesh NavMesh::read_file(const std::string& filename, float scale) {
     for (usize i = 0; i < edge_count; i++) {
         auto& edge = result.edges.emplace_back();
         Edge e;
-        f.read((char*)&e, sizeof(Edge));
-        if (e.index != SIZE_MAX) { edge.push_back(e); }
-        f.read((char*)&e, sizeof(Edge));
-        if (e.index != SIZE_MAX) { edge.push_back(e); }
-        f.read((char*)&e, sizeof(Edge));
-        if (e.index != SIZE_MAX) { edge.push_back(e); }
+        for (usize j = 0; j < 3; j++) {
+            f.read((char*)&e, sizeof(Edge));
+            e.center *= scale;
+            if (e.index != SIZE_MAX) { edge.push_back(e); }
+        }
     }
     return result;
 }
 
 }
-

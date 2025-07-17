@@ -1,0 +1,11 @@
+{
+    "library": "thread-pool",
+    "include": "include/",
+    "minstd": "C++17",
+    "configs": {},
+    "all": {
+        "links": [],
+        "binary.debug": "",
+        "binary.release": ""
+    }
+}

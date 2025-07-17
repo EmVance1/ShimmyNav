@@ -15,6 +15,16 @@ struct Vector2iHash {
     }
 };
 
+template<typename T>
+struct Vector2Cmp {
+    constexpr bool operator()(const Vector2<T>& lhs, const Vector2<T>& rhs) const {
+        if (lhs.y > rhs.y) { return false; }
+        if (lhs.y < rhs.y) { return true; }
+        if (lhs.x < rhs.x) { return true; }
+        return false;
+    }
+};
+
 
 struct Contour {
     uint8_t count;

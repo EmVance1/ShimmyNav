@@ -1,7 +1,7 @@
 #include "lib.h"
+#include <CDT/CDT.h>
 #include "gen_internal.h"
 #include "simplify.h"
-#include <CDT/CDT.h>
 
 #include "bench.h"
 
@@ -18,9 +18,9 @@ static bool collinear(Vector2i a, Vector2i b, Vector2i c) {
     return (b.y - a.y) * (c.x - b.x) == (c.y - b.y) * (b.x - a.x);
 }
 
-static bool collinear(Vector2f a, Vector2f b, Vector2f c) {
-    return ((b.y - a.y) * (c.x - b.x) - (c.y - b.y) * (b.x - a.x)) < 0.001f;
-}
+// static bool collinear(Vector2f a, Vector2f b, Vector2f c) {
+//     return ((b.y - a.y) * (c.x - b.x) - (c.y - b.y) * (b.x - a.x)) < 0.001f;
+// }
 
 
 static std::pair<size_t, size_t> shared_edge(const CDT::Triangle& a, const CDT::Triangle& b) {

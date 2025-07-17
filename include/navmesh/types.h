@@ -8,24 +8,21 @@
 
 namespace nav {
 
-typedef int8_t  i8;
-typedef int16_t i16;
-typedef int32_t i32;
-typedef int64_t i64;
+using flt32_t = float;
+using flt64_t = double;
 
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-
-typedef float  flt32_t;
-typedef double flt64_t;
-
-typedef flt32_t f32;
-typedef flt64_t f64;
-
-typedef u64 usize;
-typedef i64 isize;
+using i8  = int8_t;
+using i16 = int16_t;
+using i32 = int32_t;
+using i64 = int64_t;
+using u8  = uint8_t;
+using u16 = uint16_t;
+using u32 = uint32_t;
+using u64 = uint64_t;
+using f32 = flt32_t;
+using f64 = flt64_t;
+using isize = int64_t;
+using usize = uint64_t;
 
 
 template<typename T>
@@ -54,15 +51,20 @@ template<typename T> constexpr Vector2<T> operator-(Vector2<T> lhs, Vector2<T> r
 template<typename T> constexpr Vector2<T> operator*(Vector2<T> lhs, f32 rhs) { return Vector2<T>{ lhs.x * rhs, lhs.y * rhs }; }
 template<typename T> constexpr Vector2<T> operator/(Vector2<T> lhs, f32 rhs) { return Vector2<T>{ lhs.x / rhs, lhs.y / rhs }; }
 template<typename T> constexpr Vector2<T> operator*(f32 lhs, Vector2<T> rhs) { return Vector2<T>{ rhs.x * lhs, rhs.y * lhs }; }
-template<typename T> constexpr Vector2<T> operator/(f32 lhs, Vector2<T> rhs) { return Vector2<T>{ rhs.x / lhs, rhs.y / lhs }; }
 template<typename T> constexpr bool operator==(Vector2<T> lhs, Vector2<T> rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
 template<typename T> constexpr bool operator!=(Vector2<T> lhs, Vector2<T> rhs) { return !(lhs == rhs); }
 
+
+using Polygon = std::vector<Vector2i>;
 
 template<typename T>
 struct Circle {
     Vector2<T> pos;
     T radius = 0;
+
+    constexpr bool contains(Vector2f p) const {
+        return (pos - p).length_squared() <= radius * radius;
+    }
 };
 using IntCircle = Circle<i32>;
 using FloatCircle = Circle<f32>;
@@ -72,6 +74,7 @@ struct Triangle {
     usize A;
     usize B;
     usize C;
+    f32 weight = 1.f;
 
     constexpr Vector2f centroid(const Vector2f* vertices) const {
         const auto a = vertices[A];
@@ -155,7 +158,11 @@ struct Triangle {
 
 
 using Path = std::vector<Vector2f>;
-// using Polygon = std::vector<Vector2f>;
+struct IndexedPoint {
+    Vector2f point;
+    size_t index;
+};
+using IndexedPath = std::vector<IndexedPoint>;
 
 struct NavMesh {
     struct Edge {
@@ -174,6 +181,7 @@ struct NavMesh {
     std::optional<size_t> get_triangle(Vector2f p, f32 error = 0.f) const;
 
     Path pathfind(Vector2f begin, Vector2f end) const;
+    IndexedPath pathfind_indexed(Vector2f begin, Vector2f end) const;
 };
 
 }
