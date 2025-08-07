@@ -3,7 +3,7 @@
 
 namespace nav {
 
-Path edge_to_edge(const NavMesh& mesh, std::vector<CrossInfo>&& path, Vector2f begin, Vector2f end) {
+Path edge_to_edge(const Mesh& mesh, std::vector<CrossInfo>&& path, Vector2f begin, Vector2f end) {
     if (path.size() == 2 && path[0].next_index == path[1].next_index) {
         return { begin, end };
     }
@@ -32,7 +32,7 @@ static bool pos_angle(Vector2f lhs, Vector2f rhs) {
     return rhs.perp_cw().dot(lhs) < 0;
 }
 
-Path funnel(const NavMesh& mesh, std::vector<CrossInfo>&& path, Vector2f begin, Vector2f end) {
+Path funnel(const Mesh& mesh, std::vector<CrossInfo>&& path, Vector2f begin, Vector2f end) {
     if (path.size() == 2 && path[0].next_index == path[1].next_index) {
         return { begin, end };
     }
@@ -101,7 +101,7 @@ Path funnel(const NavMesh& mesh, std::vector<CrossInfo>&& path, Vector2f begin, 
 }
 
 /*
-IndexedPath funnel_indexed(const NavMesh& mesh, std::vector<CrossInfo>&& path, IndexedPoint begin, IndexedPoint end) {
+IndexedPath funnel_indexed(const Mesh& mesh, std::vector<CrossInfo>&& path, IndexedPoint begin, IndexedPoint end) {
     if (path.size() == 2 && path[0].next_index == path[1].next_index) {
         return { begin, end };
     }

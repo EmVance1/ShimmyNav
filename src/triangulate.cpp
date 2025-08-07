@@ -45,7 +45,7 @@ static std::pair<size_t, size_t> shared_edge(const CDT::Triangle& a, const CDT::
 }
 
 
-NavMesh generate_delauney(
+Mesh generate_delauney(
         const uint8_t* grid,
         size_t width,
         size_t height,
@@ -101,7 +101,7 @@ NavMesh generate_delauney(
 
     // BENCH_STEP("triangulation");
 
-    auto mesh = NavMesh();
+    auto mesh = Mesh();
     for (const auto& vert : cdt.vertices) {
         mesh.vertices.push_back(Vector2f{ vert.x * 0.1f, vert.y * 0.1f });
     }
@@ -111,12 +111,12 @@ NavMesh generate_delauney(
             tri.vertices[1],
             tri.vertices[2],
         });
-        auto ns = std::vector<NavMesh::Edge>();
+        auto ns = std::vector<Mesh::Edge>();
         if (tri.neighbors[0] != CDT::noNeighbor) {
             const auto [_v1, _v2] = shared_edge(tri, cdt.triangles[tri.neighbors[0]]);
             const auto v1 = Vector2f{ cdt.vertices[_v1].x, cdt.vertices[_v1].y } * 0.1f;
             const auto v2 = Vector2f{ cdt.vertices[_v2].x, cdt.vertices[_v2].y } * 0.1f;
-            ns.push_back(NavMesh::Edge{
+            ns.push_back(Mesh::Edge{
                 tri.neighbors[0],
                 v1 + (v2 - v1) / 2,
                 _v1, _v2,
@@ -126,7 +126,7 @@ NavMesh generate_delauney(
             const auto [_v1, _v2] = shared_edge(tri, cdt.triangles[tri.neighbors[1]]);
             const auto v1 = Vector2f{ cdt.vertices[_v1].x, cdt.vertices[_v1].y } * 0.1f;
             const auto v2 = Vector2f{ cdt.vertices[_v2].x, cdt.vertices[_v2].y } * 0.1f;
-            ns.push_back(NavMesh::Edge{
+            ns.push_back(Mesh::Edge{
                 tri.neighbors[1],
                 v1 + (v2 - v1) / 2,
                 _v1, _v2,
@@ -136,7 +136,7 @@ NavMesh generate_delauney(
             const auto [_v1, _v2] = shared_edge(tri, cdt.triangles[tri.neighbors[2]]);
             const auto v1 = Vector2f{ cdt.vertices[_v1].x, cdt.vertices[_v1].y } * 0.1f;
             const auto v2 = Vector2f{ cdt.vertices[_v2].x, cdt.vertices[_v2].y } * 0.1f;
-            ns.push_back(NavMesh::Edge{
+            ns.push_back(Mesh::Edge{
                 tri.neighbors[2],
                 v1 + (v2 - v1) / 2,
                 _v1, _v2,
@@ -151,7 +151,7 @@ NavMesh generate_delauney(
     return mesh;
 }
 
-NavMesh generate_delauney(
+Mesh generate_delauney(
         const uint8_t* grid,
         size_t width,
         size_t height,
@@ -203,7 +203,7 @@ NavMesh generate_delauney(
 
     BENCH_STEP("triangulation");
 
-    auto mesh = NavMesh();
+    auto mesh = Mesh();
     mesh.vertices.reserve(cdt.vertices.size());
     mesh.triangles.reserve(cdt.triangles.size());
     mesh.edges.reserve(cdt.triangles.size());
@@ -217,12 +217,12 @@ NavMesh generate_delauney(
             tri.vertices[1],
             tri.vertices[2],
         });
-        auto ns = std::vector<NavMesh::Edge>();
+        auto ns = std::vector<Mesh::Edge>();
         if (tri.neighbors[0] != CDT::noNeighbor) {
             const auto [_v1, _v2] = shared_edge(tri, cdt.triangles[tri.neighbors[0]]);
             const auto v1 = Vector2f{ cdt.vertices[_v1].x, cdt.vertices[_v1].y } * 0.1f;
             const auto v2 = Vector2f{ cdt.vertices[_v2].x, cdt.vertices[_v2].y } * 0.1f;
-            ns.push_back(NavMesh::Edge{
+            ns.push_back(Mesh::Edge{
                 tri.neighbors[0],
                 v1 + (v2 - v1) / 2,
                 _v1, _v2,
@@ -232,7 +232,7 @@ NavMesh generate_delauney(
             const auto [_v1, _v2] = shared_edge(tri, cdt.triangles[tri.neighbors[1]]);
             const auto v1 = Vector2f{ cdt.vertices[_v1].x, cdt.vertices[_v1].y } * 0.1f;
             const auto v2 = Vector2f{ cdt.vertices[_v2].x, cdt.vertices[_v2].y } * 0.1f;
-            ns.push_back(NavMesh::Edge{
+            ns.push_back(Mesh::Edge{
                 tri.neighbors[1],
                 v1 + (v2 - v1) / 2,
                 _v1, _v2,
@@ -242,7 +242,7 @@ NavMesh generate_delauney(
             const auto [_v1, _v2] = shared_edge(tri, cdt.triangles[tri.neighbors[2]]);
             const auto v1 = Vector2f{ cdt.vertices[_v1].x, cdt.vertices[_v1].y } * 0.1f;
             const auto v2 = Vector2f{ cdt.vertices[_v2].x, cdt.vertices[_v2].y } * 0.1f;
-            ns.push_back(NavMesh::Edge{
+            ns.push_back(Mesh::Edge{
                 tri.neighbors[2],
                 v1 + (v2 - v1) / 2,
                 _v1, _v2,
@@ -261,7 +261,7 @@ NavMesh generate_delauney(
 #define PI 3.1415f
 #define TAU (2.f * PI)
 
-NavMesh generate_from_shapes(
+Mesh generate_from_shapes(
         const std::vector<std::vector<Vector2f>>& polys,
         const std::vector<FloatCircle>& circles,
         const std::vector<Vector2f>& fillers,
@@ -312,7 +312,7 @@ NavMesh generate_from_shapes(
     cdt.insertEdges(edges);
     cdt.eraseOuterTriangles();
 
-    auto mesh = NavMesh();
+    auto mesh = Mesh();
     mesh.vertices.reserve(cdt.vertices.size());
     mesh.triangles.reserve(cdt.triangles.size());
     mesh.edges.reserve(cdt.triangles.size());
@@ -326,12 +326,12 @@ NavMesh generate_from_shapes(
             tri.vertices[1],
             tri.vertices[2],
         });
-        auto ns = std::vector<NavMesh::Edge>();
+        auto ns = std::vector<Mesh::Edge>();
         if (tri.neighbors[0] != CDT::noNeighbor) {
             const auto [_v1, _v2] = shared_edge(tri, cdt.triangles[tri.neighbors[0]]);
             const auto v1 = Vector2f{ cdt.vertices[_v1].x, cdt.vertices[_v1].y };
             const auto v2 = Vector2f{ cdt.vertices[_v2].x, cdt.vertices[_v2].y };
-            ns.push_back(NavMesh::Edge{
+            ns.push_back(Mesh::Edge{
                 tri.neighbors[0],
                 v1 + (v2 - v1) / 2,
                 _v1, _v2,
@@ -341,7 +341,7 @@ NavMesh generate_from_shapes(
             const auto [_v1, _v2] = shared_edge(tri, cdt.triangles[tri.neighbors[1]]);
             const auto v1 = Vector2f{ cdt.vertices[_v1].x, cdt.vertices[_v1].y };
             const auto v2 = Vector2f{ cdt.vertices[_v2].x, cdt.vertices[_v2].y };
-            ns.push_back(NavMesh::Edge{
+            ns.push_back(Mesh::Edge{
                 tri.neighbors[1],
                 v1 + (v2 - v1) / 2,
                 _v1, _v2,
@@ -351,7 +351,7 @@ NavMesh generate_from_shapes(
             const auto [_v1, _v2] = shared_edge(tri, cdt.triangles[tri.neighbors[2]]);
             const auto v1 = Vector2f{ cdt.vertices[_v1].x, cdt.vertices[_v1].y };
             const auto v2 = Vector2f{ cdt.vertices[_v2].x, cdt.vertices[_v2].y };
-            ns.push_back(NavMesh::Edge{
+            ns.push_back(Mesh::Edge{
                 tri.neighbors[2],
                 v1 + (v2 - v1) / 2,
                 _v1, _v2,

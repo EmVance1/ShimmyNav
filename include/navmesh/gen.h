@@ -1,5 +1,5 @@
 #pragma once
-#include "types.h"
+#include "mesh.h"
 
 
 namespace nav {
@@ -23,7 +23,7 @@ std::vector<IntTriangle> generate_earclip(
     );
 */
 
-NavMesh generate_delauney(
+Mesh generate_delauney(
         const u8* grid,
         usize width,
         usize height,
@@ -33,7 +33,7 @@ NavMesh generate_delauney(
         f32 epsilon
     );
 
-NavMesh generate_delauney(
+Mesh generate_delauney(
         const u8* grid,
         usize width,
         usize height,
@@ -43,7 +43,7 @@ NavMesh generate_delauney(
         f32 epsilon
     );
 
-NavMesh generate_from_shapes(
+Mesh generate_from_shapes(
         const std::vector<std::vector<Vector2f>>& polys,
         const std::vector<FloatCircle>& circles,
         const std::vector<Vector2f>& fillers,

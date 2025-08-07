@@ -1,29 +1,10 @@
 #pragma once
 #include <cmath>
-#include <cstdint>
 #include <vector>
-#include <string>
-#include <optional>
+#include "core.h"
 
 
 namespace nav {
-
-using flt32_t = float;
-using flt64_t = double;
-
-using i8  = int8_t;
-using i16 = int16_t;
-using i32 = int32_t;
-using i64 = int64_t;
-using u8  = uint8_t;
-using u16 = uint16_t;
-using u32 = uint32_t;
-using u64 = uint64_t;
-using f32 = flt32_t;
-using f64 = flt64_t;
-using isize = int64_t;
-using usize = uint64_t;
-
 
 template<typename T>
 struct Vector2 {
@@ -163,25 +144,5 @@ struct IndexedPoint {
     size_t index;
 };
 using IndexedPath = std::vector<IndexedPoint>;
-
-struct NavMesh {
-    struct Edge {
-        usize index;
-        Vector2f center;
-        usize a;
-        usize b;
-    };
-    std::vector<Vector2f> vertices;
-    std::vector<Triangle> triangles;
-    std::vector<std::vector<Edge>> edges;
-
-    void write_file(const std::string& filename, f32 scale = 1.f) const;
-    static NavMesh read_file(const std::string& filename, f32 scale = 1.f);
-
-    std::optional<size_t> get_triangle(Vector2f p, f32 error = 0.f) const;
-
-    Path pathfind(Vector2f begin, Vector2f end) const;
-    IndexedPath pathfind_indexed(Vector2f begin, Vector2f end) const;
-};
 
 }

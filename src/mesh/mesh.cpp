@@ -1,11 +1,17 @@
-#include "types.h"
+#include "mesh.h"
 #include <fstream>
 
 
 namespace nav {
 
+#ifdef _WIN32
+#define PATH_NORM(p) p
+#else
+#define PATH_NORM(p) p.u8string()
+#endif
 
-std::optional<size_t> NavMesh::get_triangle(Vector2f p, float error) const {
+
+std::optional<size_t> Mesh::get_triangle(Vector2f p, float error) const {
     for (usize i = 0; i < triangles.size(); i++) {
         if (triangles[i].contains(vertices.data(), p)) {
             return i;
@@ -21,9 +27,8 @@ std::optional<size_t> NavMesh::get_triangle(Vector2f p, float error) const {
 }
 
 
-
-void NavMesh::write_file(const std::string& filename, float scale) const {
-    auto f = std::ofstream(filename, std::ios::binary);
+void Mesh::write_file(const std::filesystem::path& filename, float scale) const {
+    auto f = std::ofstream(PATH_NORM(filename), std::ios::binary);
     const auto tri_count = triangles.size();
     f.write((char*)&tri_count, sizeof(usize));
     for (const auto& tri : triangles) {
@@ -41,7 +46,7 @@ void NavMesh::write_file(const std::string& filename, float scale) const {
         const Edge neg = { SIZE_MAX, Vector2f{}, 0, 0 };
         for (size_t i = 0; i < 3; i++) {
             if (e.size() > i) {
-                const auto _e = NavMesh::Edge{ e[i].index, e[i].center / scale, e[i].a, e[i].b };
+                const auto _e = Mesh::Edge{ e[i].index, e[i].center / scale, e[i].a, e[i].b };
                 f.write((char*)&_e, sizeof(Edge));
             } else {
                 f.write((char*)&neg, sizeof(Edge));
@@ -51,9 +56,9 @@ void NavMesh::write_file(const std::string& filename, float scale) const {
 }
 
 
-NavMesh NavMesh::read_file(const std::string& filename, float scale) {
-    auto f = std::ifstream(filename, std::ios::binary);
-    auto result = NavMesh();
+Mesh Mesh::read_file(const std::filesystem::path& filename, float scale) {
+    auto f = std::ifstream(PATH_NORM(filename), std::ios::binary);
+    auto result = Mesh();
     usize tri_count = 0;
     f.read((char*)&tri_count, sizeof(usize));
     result.triangles.reserve(tri_count);

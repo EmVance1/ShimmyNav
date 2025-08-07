@@ -32,7 +32,7 @@ using HighPrioQueue = std::priority_queue<T, std::vector<T>, std::less<T>>;
 
 
 // finds i such that B is the ith neighbor of A
-static size_t get_neighbor_index(const NavMesh& mesh, size_t a, size_t b) {
+static size_t get_neighbor_index(const Mesh& mesh, size_t a, size_t b) {
     const auto& edges = mesh.edges[a];
     size_t i = 0;
     for (const auto& e : edges) {
@@ -45,7 +45,7 @@ static size_t get_neighbor_index(const NavMesh& mesh, size_t a, size_t b) {
 }
 
 
-Path NavMesh::pathfind(Vector2f begin, Vector2f end) const {
+Path Mesh::pathfind(Vector2f begin, Vector2f end) const {
     const auto begin_idx = get_triangle(begin, 0.05f);
     const auto end_idx = get_triangle(end, 0.f);
     if (!begin_idx.has_value()) { return {}; }
@@ -113,7 +113,7 @@ Path NavMesh::pathfind(Vector2f begin, Vector2f end) const {
 }
 
 /*
-IndexedPath NavMesh::pathfind_indexed(Vector2f begin, Vector2f end) const {
+IndexedPath Mesh::pathfind_indexed(Vector2f begin, Vector2f end) const {
     const auto begin_idx = get_triangle(begin, 0.05f);
     const auto end_idx = get_triangle(end, 0.f);
     if (!begin_idx.has_value()) { return {}; }
