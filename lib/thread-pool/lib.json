@@ -1,8 +1,7 @@
 {
     "library": "thread-pool",
     "include": "include/",
-    "minstd": "C++17",
-    "configs": {},
+    "lang": "C++17",
     "all": {
         "links": [],
         "binary.debug": "",

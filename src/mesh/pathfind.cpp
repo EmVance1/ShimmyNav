@@ -44,7 +44,6 @@ static size_t get_neighbor_index(const Mesh& mesh, size_t a, size_t b) {
     return SIZE_MAX;
 }
 
-
 Path Mesh::pathfind(Vector2f begin, Vector2f end) const {
     const auto begin_idx = get_triangle(begin, 0.05f);
     const auto end_idx = get_triangle(end, 0.f);

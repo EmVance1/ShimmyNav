@@ -1,8 +1,7 @@
 {
     "library": "CDT",
-    "minstd": "C++98",
+    "lang": "C++98",
     "include": "include/",
-    "configs": {},
     "all": {
         "links": [],
         "binary.debug": "",
