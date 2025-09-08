@@ -1,0 +1,13 @@
+[package]
+name = "NavMesh"
+version = "0.1.0"
+lang = "C++17"
+kind = "staticlib"
+
+include = [ "src", "include/navmesh" ]
+include-pub = "include"
+
+[dependencies]
+CDT = { headers = "lib/CDT/include" }
+thread-pool = { headers = "lib/thread-pool/include" }
+

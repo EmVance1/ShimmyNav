@@ -74,6 +74,7 @@ Path Mesh::pathfind(Vector2f begin, Vector2f end) const {
                     total_path.insert(total_path.begin(), CrossInfo{ cur, n });
                     it = lut.find(cur);
                 }
+                // return edge_to_edge(*this, std::move(total_path), begin, end);
                 return funnel(*this, std::move(total_path), begin, end);
             } else {
                 return {};

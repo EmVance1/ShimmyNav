@@ -1,10 +1,5 @@
 {
     "library": "CDT",
     "lang": "C++98",
-    "include": "include/",
-    "all": {
-        "links": [],
-        "binary.debug": "",
-        "binary.release": ""
-    }
+    "include": "include"
 }
